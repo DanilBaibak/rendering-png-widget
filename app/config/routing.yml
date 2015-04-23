@@ -1,0 +1,5 @@
+widget:
+    resource: "@WidgetBundle/Controller/"
+    type:     annotation
+    prefix:   /
+

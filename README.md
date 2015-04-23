@@ -6,4 +6,4 @@
 <h3>Usage</h3>
 
 Public endpoint has url like <code>"/get-rate/%user_id%/%width%/%height%/%background_color%/%text_color%"</code> <br>
-Example <code>"/get-rate/2/100/100/000/fff"<code>
+Example <code>"/get-rate/2/100/100/000/fff"</code>

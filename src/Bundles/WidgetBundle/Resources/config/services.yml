@@ -4,6 +4,6 @@
 services:
     image.manager:
         class:        Bundles\WidgetBundle\Service\ImageService
-#        arguments:    ["%entity_manager%"]
         arguments:
             EntityManager: "@doctrine.orm.entity_manager"
+            fontPath: @=service('kernel').locateResource('@WidgetBundle/Resources/public/fonts/arial.ttf')

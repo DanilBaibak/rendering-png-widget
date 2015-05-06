@@ -36,16 +36,22 @@ class ImageService
     private $_em;
 
     /**
+     * @var string
+     */
+    private $fontPath;
+
+    /**
      * @param EntityManager $em Injected entity manager
      *
      * @InjectParams({
      *     "em" = @Inject("doctrine.orm.entity_manager"),
      * })
      */
-    public function __construct(EntityManager $em) {
+    public function __construct(EntityManager $em, $fontPath) {
         $this->setEntityManager($em);
         $this->optionsResolver = $this->configureOptionsResolver();
         $this->colorUtil = new ColorUtil();
+        $this->fontPath = $fontPath;
     }
 
     /**
@@ -151,7 +157,7 @@ class ImageService
             $textPosition['marginLeft'],
             $textPosition['marginTop'],
             $textColour,
-            __DIR__ . '/../Resources/public/css/arial.ttf',
+            $this->fontPath,
             $text
         );
 
@@ -190,7 +196,7 @@ class ImageService
      */
     public function getTextPosition($width, $height, $text)
     {
-        $textSize = imagettfbbox(self::FONT_SIZE, 0, __DIR__ . '/../Resources/public/css/arial.ttf', $text);
+        $textSize = imagettfbbox(self::FONT_SIZE, 0, $this->fontPath, $text);
         $textWidth = $textSize[4] - $textSize[6];
         $marginLeft = $width / 2 - $textWidth / 2;
 

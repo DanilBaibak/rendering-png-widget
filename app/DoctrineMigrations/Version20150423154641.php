@@ -18,7 +18,7 @@ class Version20150423154641 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE Users ADD role ENUM(\'active\', \'inactive\', \'blocked\'), DROP status');
+        $this->addSql('CREATE TABLE Users (id INT AUTO_INCREMENT NOT NULL, user_name VARCHAR(128) NOT NULL, hash INT NOT NULL, rate VARCHAR(32) NOT NULL, status ENUM(\'active\', \'inactive\', \'blocked\'), UNIQUE INDEX idx_hash (hash), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
     }
 
     /**
@@ -29,6 +29,6 @@ class Version20150423154641 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE Users ADD status VARCHAR(32) NOT NULL COLLATE utf8_unicode_ci, DROP role');
+        $this->addSql('DROP TABLE Users');
     }
 }

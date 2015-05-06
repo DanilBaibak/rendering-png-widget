@@ -18,7 +18,7 @@ class Version20150423154642 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('INSERT INTO Users (`user_name`, `rate`, `role`) VALUES ("Jon", "23", "active"), ("Don", "37", "active"), ("Kate", "87", "inactive")');
+        $this->addSql('INSERT INTO Users (`user_name`, `hash`, `rate`, `status`) VALUES ("Jon", "123", "23", "active"), ("Don", "433", "37", "active"), ("Kate", "934", "87", "inactive")');
     }
 
     /**

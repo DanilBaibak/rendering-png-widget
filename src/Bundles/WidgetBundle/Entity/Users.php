@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Users
  *
- * @ORM\Table()
+ * @ORM\Table("Users", uniqueConstraints={
+ *  @ORM\UniqueConstraint(name="idx_hash", columns={"hash"})
+ * }))
  * @ORM\Entity(repositoryClass="Bundles\WidgetBundle\Entity\UserRepository")
  */
 class Users
@@ -44,6 +46,13 @@ class Users
     private $userName;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="hash", type="integer", length=255)
+     */
+    private $hash;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="rate", type="string", length=32)
@@ -53,9 +62,10 @@ class Users
     /**
      * @var string
      *
-     * @ORM\Column(name="role", type="string", nullable=false, columnDefinition="ENUM('financialAdvisor', 'secretary', 'infoEditor', 'backOffice', 'admin', 'manager')")
+     * @ORM\Column(name="status", type="string", nullable=false, columnDefinition="ENUM('active', 'inactive', 'blocked')")
      */
-    private $status;
+    private $status = self::STATUS_ACTIVE;
+
 
 
     /**
@@ -90,6 +100,30 @@ class Users
     public function getUserName()
     {
         return $this->userName;
+    }
+
+    /**
+     * Set hash
+     *
+     * @param string $hash
+     *
+     * @return Users
+     */
+    public function setHash($hash)
+    {
+        $this->hash = $hash;
+
+        return $this;
+    }
+
+    /**
+     * Get hash
+     *
+     * @return string
+     */
+    public function getHash()
+    {
+        return $this->hash;
     }
 
     /**
@@ -146,4 +180,3 @@ class Users
         return $this->status;
     }
 }
-

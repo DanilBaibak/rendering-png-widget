@@ -38,19 +38,26 @@ class DefaultController extends Controller
          * Get current user by hash
          */
         $user = $this->getDoctrine()->getRepository('WidgetBundle:Users')->findOneBy([
-            'hash' => $hash,
+            'hash'   => $hash,
             'status' => Users::STATUS_ACTIVE
         ]);
 
+        //If user exists
         if ($user) {
-            $str = $this->get('image.manager')->getWidgetImage($hash, $width, $height, $bgColor, $textColor);
+            //get image
+            $str = $this->get('image.manager')->getWidgetImage($user, $width, $height, $bgColor, $textColor);
 
-            $headers = array(
-                'Content-Type'        => 'image/png',
-                'Content-Disposition' => 'inline; filename="image.png"'
-            );
-
-            $statusCode = Response::HTTP_OK;
+            if ($str) {
+                $headers = array(
+                    'Content-Type'        => 'image/png',
+                    'Content-Disposition' => 'inline; filename="image.png"'
+                );
+                $statusCode = Response::HTTP_OK;
+            } else {
+                $str = '<html><body><h2>Method unavailable</h2></body></html>';
+                $headers = array('Content-Type' => 'text/html');
+                $statusCode = Response::HTTP_SERVICE_UNAVAILABLE;
+            }
         } else {
             $str = '<html><body><h2>Current user cannot be found or inactive</h2></body></html>';
             $headers = array('Content-Type' => 'text/html');

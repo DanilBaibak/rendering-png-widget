@@ -8,6 +8,8 @@
 namespace Bundles\WidgetBundle\Service;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Bundles\WidgetBundle\Utils\ColorUtil;
 
 /**
  * Class ImageService
@@ -17,6 +19,17 @@ use Doctrine\ORM\EntityManager;
 class ImageService
 {
     const FONT_SIZE = 20;
+
+    /**
+     * @var OptionsResolver
+     */
+    private $optionsResolver;
+
+    /**
+     * @var ColorUtil
+     */
+    private $colorUtil;
+
     /**
      * @var EntityManager
      */
@@ -31,12 +44,14 @@ class ImageService
      */
     public function __construct(EntityManager $em) {
         $this->setEntityManager($em);
+        $this->optionsResolver = $this->configureOptionsResolver();
+        $this->colorUtil = new ColorUtil();
     }
 
     /**
      * @return EntityManager
      */
-    public function getEntityManager()
+    private function getEntityManager()
     {
         return $this->_em;
     }
@@ -44,27 +59,69 @@ class ImageService
     /**
      * @param EntityManager $em
      */
-    public function setEntityManager($em)
+    private function setEntityManager($em)
     {
         $this->_em = $em;
     }
 
     /**
+     * Make validation of the image options
+     *
+     * @return OptionsResolver
+     */
+    private function configureOptionsResolver()
+    {
+        $isValidBetween = function ($value, $min, $max) {
+            return $value >= $min && $value <= $max;
+        };
+
+        return (new OptionsResolver())
+            ->setDefaults([
+                'width'     => 100,
+                'height'    => 100,
+                'bgColor'   => '000000',
+                'textColor' => 'FFFFFF'
+            ])
+            ->setAllowedValues([
+                'width' => function ($value) use ($isValidBetween) {
+                    return $isValidBetween($value, 100, 500);
+                },
+                'height' => function ($value) use ($isValidBetween) {
+                    return $isValidBetween($value, 100, 500);
+                },
+                'bgColor' => function ($value) {
+                    return $this->colorUtil->isValidHexColor($value);
+                },
+                'textColor' => function ($value) {
+                    return $this->colorUtil->isValidHexColor($value);
+                }
+            ]);
+    }
+
+    /**
      * Generate image
      *
-     * @param $userId
+     * @param $user
      * @param $width
      * @param $height
      * @param $bgColor
      * @param $textColor
      * @return bool|string
      */
-    public function getWidgetImage($userId, $width, $height, $bgColor, $textColor)
+    public function getWidgetImage($user, $width, $height, $bgColor, $textColor)
     {
         $response = false;
-        $rate = $this->getUserRate($userId);
+        $rate = $user->getRate();
+        //validate incoming data
+        $options = $this->optionsResolver->resolve(array(
+            'width'     => $width,
+            'height'    => $height,
+            'bgColor'   => $bgColor,
+            'textColor' => $textColor
+        ));
+
         if ($rate) {
-            $response = $this->createImage($rate . "%", $width, $height, $bgColor, $textColor);
+            $response = $this->createImage($rate . "%", $options);
         }
 
         return $response;
@@ -74,18 +131,15 @@ class ImageService
      * Create image by the configurations
      *
      * @param $text
-     * @param $width
-     * @param $height
-     * @param $bgColor
-     * @param $textColor
+     * @param $options
      * @return string
      */
-    public function createImage($text, $width, $height, $bgColor, $textColor)
+    public function createImage($text, $options)
     {
-        $newImg = imagecreate($width, $height);
-        $backColors = $this->hex2rgb($bgColor);
-        $textColors = $this->hex2rgb($textColor);
-        $textPosition = $this->getTextPosition($width, $height, $text);
+        $newImg = imagecreate($options['width'], $options['height']);
+        $backColors = $this->colorUtil->hex2rgb($options['bgColor']);
+        $textColors = $this->colorUtil->hex2rgb($options['textColor']);
+        $textPosition = $this->getTextPosition($options['width'], $options['height'], $text);
 
         $background = imagecolorallocate($newImg, $backColors[0], $backColors[1], $backColors[2]);
         $textColour = imagecolorallocate($newImg, $textColors[0], $textColors[1], $textColors[2]);
@@ -124,29 +178,6 @@ class ImageService
             ->getUserRate($userId);
 
         return empty($response) ? false : $response[0]['rate'];
-    }
-
-    /**
-     * Returns an array with the rgb values
-     * 
-     * @param $hex
-     * @return array
-     */
-    public function hex2rgb($hex)
-    {
-        if (strlen($hex) == 3) {
-            $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
-            $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
-            $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
-        } else {
-            $r = hexdec(substr($hex, 0, 2));
-            $g = hexdec(substr($hex, 2, 2));
-            $b = hexdec(substr($hex, 4, 2));
-        }
-        
-        $rgb = array($r, $g, $b);
-        
-        return $rgb;
     }
 
     /**

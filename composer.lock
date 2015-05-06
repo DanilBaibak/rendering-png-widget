@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2de0bae3afbf6adac3ed5cfc2c21a957",
+    "hash": "ef77dd59a251756eb3aef09e3166c00d",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2423,12 +2423,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "386f7332c9a68ed04956195d0f64a842bad4f037"
+                "reference": "09cb24bbad856b9feb2688ba826ce6ccb737949e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/386f7332c9a68ed04956195d0f64a842bad4f037",
-                "reference": "386f7332c9a68ed04956195d0f64a842bad4f037",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/09cb24bbad856b9feb2688ba826ce6ccb737949e",
+                "reference": "09cb24bbad856b9feb2688ba826ce6ccb737949e",
                 "shasum": ""
             },
             "require": {
@@ -2532,7 +2532,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2015-04-22 21:34:18"
+            "time": "2015-05-05 16:51:00"
         },
         {
             "name": "twig/extensions",

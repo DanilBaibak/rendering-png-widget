@@ -6,22 +6,23 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Bundles\WidgetBundle\Entity\Users;
 
 class DefaultController extends Controller
 {
     /**
      * Generate images by current settings
      *
-     * @param int $userId id of the user
+     * @param int $hash id of the user
      * @param int $width width of the image
      * @param int $height height of the image
      * @param string $bgColor background color
      * @param string $textColor text color
      *
      * @Route(
-     *      "/get-rate/{userId}/{width}/{height}/{bgColor}/{textColor}",
+     *      "/get-rate/{hash}/{width}/{height}/{bgColor}/{textColor}",
      *      requirements={
-     *          "userId": "([0-9]{1,3})",
+     *          "hash": "([0-9]{1,3})",
      *          "width": "([0-9]{1,3})",
      *          "height": "([0-9]{1,3})",
      *          "bgColor": "[0-9a-fA-F]+",
@@ -31,11 +32,19 @@ class DefaultController extends Controller
      *
      * @return Response
      */
-    public function indexAction($userId, $width, $height, $bgColor, $textColor)
+    public function indexAction($hash, $width, $height, $bgColor, $textColor)
     {
-        $str = $this->get('image.manager')->getWidgetImage($userId, $width, $height, $bgColor, $textColor);
+        /**
+         * Get current user by hash
+         */
+        $user = $this->getDoctrine()->getRepository('WidgetBundle:Users')->findOneBy([
+            'hash' => $hash,
+            'status' => Users::STATUS_ACTIVE
+        ]);
 
-        if ($str) {
+        if ($user) {
+            $str = $this->get('image.manager')->getWidgetImage($hash, $width, $height, $bgColor, $textColor);
+
             $headers = array(
                 'Content-Type'        => 'image/png',
                 'Content-Disposition' => 'inline; filename="image.png"'

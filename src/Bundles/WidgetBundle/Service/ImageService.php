@@ -42,9 +42,11 @@ class ImageService
 
     /**
      * @param EntityManager $em Injected entity manager
+     * @param string $fontPath Injected entity manager
      *
      * @InjectParams({
      *     "em" = @Inject("doctrine.orm.entity_manager"),
+     *     "fontPath" = @Inject("fontPath")
      * })
      */
     public function __construct(EntityManager $em, $fontPath) {

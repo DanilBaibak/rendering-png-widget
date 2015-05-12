@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+    {% block header %}{% endblock %}
+    {% block footer %}{% endblock %}
+
+{% block body %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Hash</th>
+                <th>Status</th>
+                <th>Rate</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.userName }}</td>
+                    <td>{{ user.hash }}</td>
+                    <td>{{ user.status }}</td>
+                    <td>{{ user.rate }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

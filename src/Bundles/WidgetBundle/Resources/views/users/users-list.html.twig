@@ -4,13 +4,17 @@
     {% block footer %}{% endblock %}
 
 {% block body %}
+    <a href="/user_edit" class="btn btn-sm btn-default">
+        Create new user
+    </a>
+
     <table>
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Hash</th>
                 <th>Status</th>
                 <th>Rate</th>
+                <th>Actions</th>
             </tr>
         </thead>
 
@@ -18,9 +22,19 @@
             {% for user in users %}
                 <tr>
                     <td>{{ user.userName }}</td>
-                    <td>{{ user.hash }}</td>
                     <td>{{ user.status }}</td>
                     <td>{{ user.rate }}</td>
+                    <td>
+                        <div class="item-actions">
+                            <a href="/user_edit/{{ user.hash }}" class="btn btn-sm btn-default">
+                                Edit
+                            </a>
+                            &nbsp;
+                            <a href="/create_image/{{ user.hash }}" class="btn btn-sm btn-default">
+                                Create image
+                            </a>
+                        </div>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -3,6 +3,8 @@
 namespace Bundles\WidgetBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Id\SequenceGenerator;
+use Doctrine\ORM\Id\GeneratedValue;
 
 /**
  * Users
@@ -41,13 +43,12 @@ class Users
     /**
      * @var string
      *
-     * @ORM\Column(name="user_name", type="string", length=128)
+     * @ORM\Column(name="user_name", type="string", length=128, nullable=false)
      */
     private $userName;
 
     /**
      * @var integer
-     *
      * @ORM\Column(name="hash", type="integer", length=255)
      */
     private $hash;
@@ -55,7 +56,7 @@ class Users
     /**
      * @var string
      *
-     * @ORM\Column(name="rate", type="string", length=32)
+     * @ORM\Column(name="rate", type="string", length=32, nullable=false)
      */
     private $rate;
 
